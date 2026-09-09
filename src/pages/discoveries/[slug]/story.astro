@@ -1,0 +1,32 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { discoveries,pageUrl } from '../../../data/discoveries';
+import { stories,storyFor,storyUrl } from '../../../data/stories';
+import { Image } from 'astro:assets';
+export function getStaticPaths(){return stories.map(story=>({params:{slug:story.frontmatter.discovery},props:{story}}));}
+const {story}=Astro.props;
+const {frontmatter:meta,Content}=story;
+const d=discoveries.find(d=>d.slug===meta.discovery)!;
+const ordered=discoveries.filter(d=>storyFor(d.slug));
+const index=ordered.findIndex(d=>d.slug===meta.discovery);
+const previous=ordered[index-1],next=ordered[index+1];
+const images=import.meta.glob('../../../../assets/*.png',{eager:true,import:'default'});
+const date=new Date(meta.researchedThrough+'T12:00:00Z').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
+---
+<Layout title={meta.title} description={meta.summary} checkedDate={date}>
+ <article class="story-page">
+  <header class="story-header">
+   <a class="back" href={pageUrl(d.slug)}>← Back to the illustrated explainer</a>
+   <p class="eyebrow">THE STORY BEHIND THE DISCOVERY / {d.field}</p>
+   <h1>{meta.title}</h1>
+   <p class="story-deck">{meta.summary}</p>
+   <p class="story-dateline">By Dr. Plate · Researched through <time datetime={meta.researchedThrough}>{date}</time></p>
+  </header>
+  <figure class="story-plate"><Image src={images[`../../../../assets/${d.image}`] as any} alt={d.alt} width={720} format="webp" loading="eager"/><figcaption>{meta.plateCaption} <a href={pageUrl(d.slug)}>Try the illustrated experiment →</a></figcaption></figure>
+  <aside class="story-timeline" aria-labelledby="timeline-title"><p class="eyebrow">THE PUBLIC TRAIL</p><h2 id="timeline-title">A few dates to hold onto</h2><ol>{meta.timeline.map(event=><li><p class="event-date">{event.date}</p><h3><a href={event.url}>{event.label} ↗</a></h3><p>{event.text}</p></li>)}</ol></aside>
+  <div class="story-prose"><Content/></div>
+  <section class="story-reading" aria-labelledby="reading-title"><p class="eyebrow">KEEP EXPLORING</p><h2 id="reading-title">Read these next</h2><p>Begin with the accessible accounts. Each author’s relationship to the work is identified below.</p><ol>{meta.sources.map(source=><li><p class="eyebrow">{source.role}</p><h3><a href={source.url}>{source.title} ↗</a></h3><p class="reference-author">{source.author}</p><p>{source.note}</p></li>)}</ol></section>
+  <a class="story-return" href={pageUrl(d.slug)}>Return to the picture and experiment →</a>
+  {(previous||next)&&<nav class="page-nav" aria-label="Companion stories">{previous&&<a href={storyUrl(previous.slug)}><small>← PREVIOUS STORY</small>{storyFor(previous.slug)!.frontmatter.title}</a>}{next&&<a href={storyUrl(next.slug)}><small>NEXT STORY →</small>{storyFor(next.slug)!.frontmatter.title}</a>}</nav>}
+ </article>
+</Layout>
