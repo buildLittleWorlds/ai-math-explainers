@@ -1,0 +1,7 @@
+---
+import '../styles/global.css';
+import { pageUrl } from '../data/discoveries';
+const { title, description } = Astro.props;
+---
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><title>{title} · The Mathematics of Discovery</title><link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)}/></head>
+<body><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="brand" href={pageUrl()}><span class="brand-mark" aria-hidden="true">∴</span><span>The Mathematics<br/><strong>of Discovery</strong></span></a><nav aria-label="Main"><a href={`${pageUrl()}#atlas`}>The ten discoveries</a><a href={`${pageUrl()}#purpose`}>About this guide</a></nav><span class="edition">FIELD NOTES<br/>2025—2026</span></header><main id="main"><slot/></main><footer><a href={pageUrl()}>The Mathematics of Discovery</a><p>An illustrated guide by Dr. Plate · Sources checked September 8, 2026.<br/>AI-generated teaching plates. Interactive examples explain ideas; they are not research proofs.</p><a href="https://github.com/buildLittleWorlds/ai-math-explainers">Source on GitHub ↗</a></footer></body></html>

@@ -1,0 +1,21 @@
+---
+const { d } = Astro.props;
+const id=d.slug;
+---
+<section class="experiment" data-experiment={id} aria-labelledby="experiment-title"><p class="eyebrow">TRY THE IDEA</p><h2 id="experiment-title">{d.activity}</h2><p>{d.instruction}</p>
+<div class="controls">
+{id==='matrix-multiplication'&&<><button data-mode="49" aria-pressed="true">49 multiplications</button><button data-mode="48" aria-pressed="false">48 multiplications</button></>}
+{id==='kissing-number'&&<><button data-mode="6" aria-pressed="true">Six surrounding circles</button><button data-mode="7" aria-pressed="false">Try seven</button></>}
+{id==='convergence'&&<><label>Step <input data-range type="range" min="1" max="30" value="1"/></label><label><input data-toggle type="checkbox"/> Compare alternating answers</label></>}
+{id==='unit-distance'&&<><button data-mode="line" aria-pressed="true">Line</button><button data-mode="hexagon" aria-pressed="false">Hexagon + center</button></>}
+{id==='cycle-double-cover'&&['Upper triangle','Lower triangle','Outer square'].map((label,i)=><label><input type="checkbox" data-loop={i} checked/>{label}</label>)}
+{id==='lattice-volume'&&<label>Scale <input data-range type="range" min="80" max="160" value="100" step="1"/></label>}
+{id==='riemann-bound'&&<><button data-mode="41.6" aria-pressed="false">Previous: 41.6%</button><button data-mode="67.2" aria-pressed="true">New: 67.2%</button></>}
+{id==='lean-formalization'&&<label><input data-toggle type="checkbox" checked/> Include the premise: all multiples of 4 are even</label>}
+{id==='navier-stokes'&&<><label>Time <input data-range type="range" min="0" max="999" value="0" step="1"/></label><label>Vertical ceiling <select data-ceiling><option value="10">10</option><option value="100">100</option><option value="1000">1,000</option></select></label></>}
+<button data-reset>Reset</button></div>
+{id==='matrix-multiplication'?<div class="count-grid" data-drawing aria-label="Multiplication count illustration"></div>:id==='riemann-bound'?<div class="proportion" data-drawing><span></span></div>:id==='lean-formalization'?<details open><summary>A tiny argument, made explicit</summary><ol class="steps"><li>Every multiple of 4 is even. <span data-premise>Premise included.</span></li><li>12 is a multiple of 4.</li><li data-conclusion>Therefore 12 is even.</li></ol></details>:<svg data-drawing viewBox="0 0 640 360" role="img" aria-label={d.activity}><text x="25" y="180">Use the controls to explore this illustration.</text></svg>}
+{id==='ramsey-colors'&&<div class="edge-controls" aria-label="Change edge colors"></div>}
+<p class="readout" aria-live="polite" aria-atomic="true" data-readout>{d.caveat}</p><p class="small">{d.caveat}</p><noscript><p>The experiment needs JavaScript. The image and explanation above remain available.</p></noscript>
+</section>
+<script>import { initExperiments } from '../lib/experiments.mjs'; initExperiments();</script>
